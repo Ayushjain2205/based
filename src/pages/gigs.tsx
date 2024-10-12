@@ -8,9 +8,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { Coins, Clock, MapPin, Repeat, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Coins,
+  Clock,
+  MapPin,
+  Repeat,
+  Zap,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 interface Gig {
   id: number;
@@ -103,26 +112,35 @@ const getCategoryEmoji = (category: string) => {
 const GigsPage = () => {
   const [filteredGigs, setFilteredGigs] = useState<Gig[]>(gigs);
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [minPay, setMinPay] = useState<string>("");
+  const [minPay, setMinPay] = useState<number>(0);
+  const [gigType, setGigType] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const handleCategoryChange = (value: string) => {
     setCategoryFilter(value);
-    filterGigs(value, minPay);
+    filterGigs(value, minPay, gigType);
   };
 
-  const handleMinPayChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setMinPay(value);
-    filterGigs(categoryFilter, value);
+  const handleMinPayChange = (value: number[]) => {
+    setMinPay(value[0]);
+    filterGigs(categoryFilter, value[0], gigType);
   };
 
-  const filterGigs = (category: string, pay: string) => {
+  const handleGigTypeChange = (value: string) => {
+    setGigType(value);
+    filterGigs(categoryFilter, minPay, value);
+  };
+
+  const filterGigs = (category: string, pay: number, type: string) => {
     let filtered = gigs;
     if (category !== "all") {
       filtered = filtered.filter((gig) => gig.category === category);
     }
-    if (pay) {
-      filtered = filtered.filter((gig) => gig.pay >= parseInt(pay));
+    filtered = filtered.filter((gig) => gig.pay >= pay);
+    if (type !== "all") {
+      filtered = filtered.filter(
+        (gig) => gig.isRecurring === (type === "recurring")
+      );
     }
     setFilteredGigs(filtered);
   };
@@ -141,56 +159,103 @@ const GigsPage = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto ">
         <h1 className="text-xl font-semibold mb-4 text-left text-black">
           Available Gigs
         </h1>
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="w-full sm:w-1/2">
-            <Label
-              htmlFor="category-filter"
-              className="text-[#4CAF50] font-semibold"
-            >
-              Choose Your Expertise 🛠️
-            </Label>
-            <Select onValueChange={handleCategoryChange} value={categoryFilter}>
-              <SelectTrigger
-                id="category-filter"
-                className="bg-white border-2 border-[#FFA500] focus:ring-[#FFA500]"
-              >
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">🌟 All Categories</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {getCategoryEmoji(category)} {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="w-full sm:w-1/2">
-            <Label htmlFor="min-pay" className="text-[#4CAF50] font-semibold">
-              Minimum Pay (₹) 💰
-            </Label>
-            <Input
-              id="min-pay"
-              type="number"
-              placeholder="Enter minimum pay"
-              value={minPay}
-              onChange={handleMinPayChange}
-              className="bg-white border-2 border-[#FFA500] focus:ring-[#FFA500]"
-            />
-          </div>
-        </div>
+        <Button
+          onClick={() => setShowFilters(!showFilters)}
+          className="mb-4 bg-[#FFA500] hover:bg-[#FF8C00] text-white rounded-xl w-full"
+        >
+          {showFilters ? "Hide Filters 🙈" : "Show Filters 🔍"}
+          {showFilters ? (
+            <ChevronUp className="ml-2 h-4 w-4" />
+          ) : (
+            <ChevronDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+
+        {showFilters && (
+          <Card className="mb-6 overflow-hidden rounded-xl">
+            <CardContent className="p-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <Label
+                    htmlFor="category-filter"
+                    className="text-[#4CAF50] font-semibold mb-2 block"
+                  >
+                    Expertise 🛠️
+                  </Label>
+                  <Select
+                    onValueChange={handleCategoryChange}
+                    value={categoryFilter}
+                  >
+                    <SelectTrigger
+                      id="category-filter"
+                      className="w-full bg-white border-2 border-[#FFA500] focus:ring-[#FFA500] rounded-xl"
+                    >
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">🌟 All Categories</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {getCategoryEmoji(category)} {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label
+                    htmlFor="min-pay"
+                    className="text-[#4CAF50] font-semibold mb-2 block"
+                  >
+                    Minimum Pay 💰
+                  </Label>
+                  <Slider
+                    id="min-pay"
+                    min={0}
+                    max={2000}
+                    step={100}
+                    value={[minPay]}
+                    onValueChange={handleMinPayChange}
+                    className="mt-2"
+                  />
+                  <div className="text-center mt-1">₹{minPay}</div>
+                </div>
+                <div>
+                  <Label
+                    htmlFor="gig-type"
+                    className="text-[#4CAF50] font-semibold mb-2 block"
+                  >
+                    Gig Type 🔄
+                  </Label>
+                  <Select onValueChange={handleGigTypeChange} value={gigType}>
+                    <SelectTrigger
+                      id="gig-type"
+                      className="w-full bg-white border-2 border-[#FFA500] focus:ring-[#FFA500] rounded-xl"
+                    >
+                      <SelectValue placeholder="Select gig type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="one-time">One-time ⚡</SelectItem>
+                      <SelectItem value="recurring">Recurring 🔄</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredGigs.map((gig) => (
             <Card
               key={gig.id}
-              className="overflow-hidden hover:shadow-md transition-shadow duration-300"
+              className="overflow-hidden hover:shadow-md transition-shadow duration-300 rounded-xl"
             >
               <CardContent className="p-3">
                 <div className="flex justify-between items-start mb-2">
@@ -198,15 +263,9 @@ const GigsPage = () => {
                     {gig.title}
                   </h2>
                   {gig.isRecurring ? (
-                    <Repeat
-                      className="w-5 h-5 text-[#4CAF50]"
-                      title="Recurring Gig"
-                    />
+                    <Repeat className="w-5 h-5 text-[#4CAF50]" />
                   ) : (
-                    <Zap
-                      className="w-5 h-5 text-[#FFA500]"
-                      title="One-time Gig"
-                    />
+                    <Zap className="w-5 h-5 text-[#FFA500]" />
                   )}
                 </div>
                 <div className="flex items-center mb-2">
