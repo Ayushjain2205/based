@@ -1,7 +1,7 @@
 import ProfileCard from "@/components/functional/ProfileCard";
 import Layout from "@/components/Layout";
 import React from "react";
-
+import UnlockedBenefits from "@/components/functional/UnlockedBenefits";
 const index = () => {
   return (
     <Layout>
@@ -13,6 +13,7 @@ const index = () => {
         platformScore={750}
         roziCoins={1000}
       />
+      <UnlockedBenefits />
     </Layout>
   );
 };
