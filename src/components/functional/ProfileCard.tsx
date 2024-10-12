@@ -1,7 +1,7 @@
 import React from "react";
 import { Star, CheckCircle, Wrench, Coins, Gauge } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 interface ProfileCardProps {
   name: string;
@@ -25,18 +25,7 @@ export default function ProfileCard({
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <Avatar className="w-16 h-16 border-2 border-[#FFA500]">
-              <AvatarImage
-                src="/placeholder.svg?height=64&width=64"
-                alt={name}
-              />
-              <AvatarFallback>
-                {name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
+            <Image src="/avatar.svg" alt="profile" width={64} height={64} />
             <div>
               <h2 className="text-lg font-bold text-black">{name}</h2>
               <div className="flex items-center text-sm text-gray-600">
