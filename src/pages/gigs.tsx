@@ -1,8 +1,8 @@
 import Layout from "@/components/Layout";
 import React from "react";
 
-const jobs = () => {
-  return <Layout>jobs</Layout>;
+const gigs = () => {
+  return <Layout>gigs</Layout>;
 };
 
-export default jobs;
+export default gigs;

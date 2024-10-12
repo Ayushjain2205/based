@@ -58,10 +58,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             isActive={router.pathname === "/"}
           />
           <NavItem
-            href="/jobs"
+            href="/gigs"
             icon={<Briefcase className="w-5 h-5" />}
-            label="Jobs"
-            isActive={router.pathname === "/jobs"}
+            label="Gigs"
+            isActive={router.pathname === "/gigs"}
           />
           <NavItem
             href="/finance"
