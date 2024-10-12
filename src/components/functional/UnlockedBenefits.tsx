@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle, Lock } from "lucide-react";
 
 interface Milestone {
   icon: string;
   title: string;
-  value: string;
+  isUnlocked: boolean;
+  unlockCondition?: string;
 }
 
 interface BenefitCardProps {
@@ -42,6 +44,39 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
   );
 };
 
+const JourneyMap: React.FC<{ milestones: Milestone[] }> = ({ milestones }) => {
+  return (
+    <div className="space-y-4">
+      {milestones.map((milestone, index) => (
+        <div key={index} className="flex items-center">
+          <div
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+              milestone.isUnlocked ? "bg-[#4CAF50]" : "bg-gray-300"
+            }`}
+          >
+            {milestone.isUnlocked ? (
+              <CheckCircle className="w-6 h-6 text-white" />
+            ) : (
+              <Lock className="w-5 h-5 text-gray-600" />
+            )}
+          </div>
+          <div className="ml-4 flex-grow">
+            <div className="flex items-center">
+              <span className="text-2xl mr-2">{milestone.icon}</span>
+              <span className="text-lg font-semibold">{milestone.title}</span>
+            </div>
+            {!milestone.isUnlocked && milestone.unlockCondition && (
+              <p className="text-sm text-gray-600 mt-1">
+                {milestone.unlockCondition}
+              </p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const UnlockedBenefits: React.FC = () => {
   const [expandedBenefit, setExpandedBenefit] = useState<string | null>(null);
 
@@ -50,34 +85,59 @@ const UnlockedBenefits: React.FC = () => {
       title: "Insurance",
       emoji: "🛡️",
       milestones: [
-        { icon: "🏥", title: "Health Coverage", value: "Basic" },
-        { icon: "🚑", title: "Accident Insurance", value: "✓" },
-        { icon: "👨‍👩‍👧‍👦", title: "Family Coverage", value: "50 gigs away" },
+        { icon: "🏥", title: "Health Coverage", isUnlocked: true },
+        { icon: "🚑", title: "Accident Insurance", isUnlocked: true },
+        {
+          icon: "👨‍👩‍👧‍👦",
+          title: "Family Coverage",
+          isUnlocked: false,
+          unlockCondition: "Complete 50 gigs to unlock",
+        },
       ],
     },
     {
       title: "Loans",
       emoji: "💰",
       milestones: [
-        { icon: "🚨", title: "Emergency Loan", value: "Up to ₹5,000" },
-        { icon: "💼", title: "Business Loan", value: "40 gigs away" },
-        { icon: "🏠", title: "Housing Loan", value: "100 gigs away" },
+        { icon: "🚨", title: "Emergency Loan", isUnlocked: true },
+        {
+          icon: "💼",
+          title: "Business Loan",
+          isUnlocked: false,
+          unlockCondition: "Complete 100 gigs to unlock",
+        },
+        {
+          icon: "🏠",
+          title: "Housing Loan",
+          isUnlocked: false,
+          unlockCondition: "Maintain 4.8 rating for 6 months",
+        },
       ],
     },
     {
       title: "Subsidies",
       emoji: "🏷️",
       milestones: [
-        { icon: "🔧", title: "Tool Discount", value: "10% off" },
-        { icon: "📚", title: "Skill Upgrade", value: "35 gigs away" },
-        { icon: "🎫", title: "License Renewal", value: "60 gigs away" },
+        { icon: "🔧", title: "Tool Discount", isUnlocked: true },
+        {
+          icon: "📚",
+          title: "Skill Upgrade",
+          isUnlocked: false,
+          unlockCondition: "Complete 75 gigs to unlock",
+        },
+        {
+          icon: "🎫",
+          title: "License Renewal",
+          isUnlocked: false,
+          unlockCondition: "Maintain 4.7 rating for 1 year",
+        },
       ],
     },
   ];
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold text-left mt-6 mb-2">
+      <h2 className="text-2xl font-bold text-left mt-6 mb-2">
         Unlocked Benefits
       </h2>
       <div className="grid grid-cols-3 gap-4">
@@ -98,24 +158,14 @@ const UnlockedBenefits: React.FC = () => {
         <Card className="w-full mt-4 border-[#FFA500] border-2">
           <CardContent className="p-4">
             <h4 className="text-xl font-semibold mb-4 text-[#FFA500]">
-              {expandedBenefit} Metrics
+              {expandedBenefit} Journey
             </h4>
-            {benefits
-              .find((b) => b.title === expandedBenefit)
-              ?.milestones.map((milestone, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center mb-3 bg-gray-100 p-2 rounded"
-                >
-                  <div className="flex items-center">
-                    <span className="text-2xl mr-2">{milestone.icon}</span>
-                    <span className="text-lg">{milestone.title}</span>
-                  </div>
-                  <span className="text-lg font-semibold text-[#4CAF50]">
-                    {milestone.value}
-                  </span>
-                </div>
-              ))}
+            <JourneyMap
+              milestones={
+                benefits.find((b) => b.title === expandedBenefit)?.milestones ||
+                []
+              }
+            />
           </CardContent>
         </Card>
       )}
