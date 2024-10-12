@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Lock } from "lucide-react";
+import { CheckCircle, Lock, Users } from "lucide-react";
 
 interface Milestone {
   icon: string;
   title: string;
   isUnlocked: boolean;
   unlockCondition?: string;
+}
+
+interface Community {
+  name: string;
+  members: number;
+  icon: string;
 }
 
 interface BenefitCardProps {
@@ -77,6 +83,23 @@ const JourneyMap: React.FC<{ milestones: Milestone[] }> = ({ milestones }) => {
   );
 };
 
+const CommunityCard: React.FC<Community> = ({ name, members, icon }) => {
+  return (
+    <Card className="w-full hover:shadow-md transition-shadow duration-300">
+      <CardContent className="p-4 flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="text-3xl mr-3">{icon}</span>
+          <span className="font-semibold text-lg">{name}</span>
+        </div>
+        <div className="flex items-center bg-gray-100 rounded-full px-3 py-1">
+          <Users className="w-4 h-4 mr-1 text-[#4CAF50]" />
+          <span className="text-sm font-bold">{members}</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const UnlockedBenefits: React.FC = () => {
   const [expandedBenefit, setExpandedBenefit] = useState<string | null>(null);
 
@@ -135,40 +158,58 @@ const UnlockedBenefits: React.FC = () => {
     },
   ];
 
+  const communities: Community[] = [
+    { name: "Plumbers of Bangalore", members: 1234, icon: "🔧" },
+    { name: "Urban Company Partners", members: 5678, icon: "🏙️" },
+    { name: "Handymen Network", members: 3456, icon: "🛠️" },
+    { name: "Electricians United", members: 2345, icon: "⚡" },
+  ];
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-left mt-6 mb-2">
-        Unlocked Benefits
-      </h2>
-      <div className="grid grid-cols-3 gap-4">
-        {benefits.map((benefit) => (
-          <BenefitCard
-            key={benefit.title}
-            {...benefit}
-            isActive={expandedBenefit === benefit.title}
-            onClick={() =>
-              setExpandedBenefit(
-                expandedBenefit === benefit.title ? null : benefit.title
-              )
-            }
-          />
-        ))}
-      </div>
-      {expandedBenefit && (
-        <Card className="w-full mt-4 border-[#FFA500] border-2">
-          <CardContent className="p-4">
-            <h4 className="text-xl font-semibold mb-4 text-[#FFA500]">
-              {expandedBenefit} Journey
-            </h4>
-            <JourneyMap
-              milestones={
-                benefits.find((b) => b.title === expandedBenefit)?.milestones ||
-                []
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold text-left mt-6 mb-2">
+          Unlocked Benefits
+        </h2>
+        <div className="grid grid-cols-3 gap-4">
+          {benefits.map((benefit) => (
+            <BenefitCard
+              key={benefit.title}
+              {...benefit}
+              isActive={expandedBenefit === benefit.title}
+              onClick={() =>
+                setExpandedBenefit(
+                  expandedBenefit === benefit.title ? null : benefit.title
+                )
               }
             />
-          </CardContent>
-        </Card>
-      )}
+          ))}
+        </div>
+        {expandedBenefit && (
+          <Card className="w-full mt-4 border-[#FFA500] border-2">
+            <CardContent className="p-4">
+              <h4 className="text-xl font-semibold mb-4 text-[#FFA500]">
+                {expandedBenefit} Journey
+              </h4>
+              <JourneyMap
+                milestones={
+                  benefits.find((b) => b.title === expandedBenefit)
+                    ?.milestones || []
+                }
+              />
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-left mb-4">Your Communities</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {communities.map((community) => (
+            <CommunityCard key={community.name} {...community} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
