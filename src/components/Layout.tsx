@@ -1,8 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Home, Briefcase, PiggyBank, Users, User } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,11 +11,45 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  if (!isMobile) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#FFFFF0] to-white text-gray-800 p-4">
+        <div className="flex flex-col items-center justify-center max-w-md text-center">
+          <h1 className="text-3xl font-bold text-[#FFA500] mb-4">Rozi</h1>
+          <p className="text-lg mb-8">
+            Please open this app on a mobile device for the best experience.
+          </p>
+          <Image
+            src="/logo.svg"
+            alt="Rozi Logo"
+            width={100}
+            height={100}
+            className="mx-auto"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFFF0] text-gray-800">
       <main className="flex-1 p-4 pb-20">{children}</main>
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4CAF50]">
         <div className="max-w-md mx-auto flex justify-around items-center h-16 px-2">
           <NavItem
             href="/"
@@ -66,21 +101,21 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon, label, isActive }) => (
   >
     <motion.div
       className={`flex flex-col items-center justify-center w-12 h-12 ${
-        isActive ? "text-white" : "text-gray-400"
+        isActive ? "text-white" : "text-gray-600"
       }`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
     >
       <div
         className={`p-2 rounded-full ${
-          isActive ? "bg-[#FF9933] shadow-lg" : "hover:bg-[#FFF5E6]"
+          isActive ? "bg-[#FFA500] shadow-lg" : "hover:bg-[#FFF5E6]"
         }`}
       >
         {icon}
       </div>
       <motion.span
         className={`text-[10px] font-medium mt-1 ${
-          isActive ? "text-[#FF9933]" : "text-gray-400"
+          isActive ? "text-[#FFA500]" : "text-gray-600"
         }`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
