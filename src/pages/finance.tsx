@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,17 +53,29 @@ const lendingRequests: LendingRequest[] = [
   },
 ];
 
+const ROZI_COIN_RATE = 0.1; // 1 $ROZI coin per 10 INR lent
+
 const FinancePage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<LendingRequest | null>(
     null
   );
   const [lendAmount, setLendAmount] = useState<string>("");
+  const [roziCoins, setRoziCoins] = useState<number>(0);
   const [borrowTitle, setBorrowTitle] = useState("");
   const [borrowAmount, setBorrowAmount] = useState("");
   const [borrowDeadline, setBorrowDeadline] = useState<Date | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    if (lendAmount) {
+      const amount = parseFloat(lendAmount);
+      setRoziCoins(Math.floor(amount * ROZI_COIN_RATE));
+    } else {
+      setRoziCoins(0);
+    }
+  }, [lendAmount]);
 
   const handleBorrowSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +98,7 @@ const FinancePage: React.FC = () => {
       const maxLendAmount = selectedRequest.amount - selectedRequest.fulfilled;
       if (lendAmountNumber > 0 && lendAmountNumber <= maxLendAmount) {
         console.log(`Lending ${lendAmount} to request ${selectedRequest.id}`);
+        console.log(`User receives ${roziCoins} $ROZI coins`);
         // Update the fulfilled amount (this should be done on the server in a real app)
         selectedRequest.fulfilled += lendAmountNumber;
       } else {
@@ -160,7 +173,7 @@ const FinancePage: React.FC = () => {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start text-left font-normal rounded-xl ${
+                        className={`w-full justify-start text-left font-normal ${
                           !borrowDeadline && "text-muted-foreground"
                         }`}
                       >
@@ -270,6 +283,9 @@ const FinancePage: React.FC = () => {
                                 selectedRequest.fulfilled
                               ).toLocaleString()
                             : 0}
+                        </div>
+                        <div className="text-sm font-semibold text-[#4CAF50]">
+                          You will receive: {roziCoins} $ROZI coins
                         </div>
                         <Button
                           type="submit"
