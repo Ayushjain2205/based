@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 interface LendingRequest {
   id: number;
@@ -56,7 +57,8 @@ const lendingRequests: LendingRequest[] = [
 const ROZI_COIN_RATE = 0.1; // 1 $ROZI coin per 10 INR lent
 
 const FinancePage: React.FC = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [borrowDialogOpen, setBorrowDialogOpen] = useState(false);
+  const [lendDialogOpen, setLendDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<LendingRequest | null>(
     null
   );
@@ -67,6 +69,7 @@ const FinancePage: React.FC = () => {
   const [borrowDeadline, setBorrowDeadline] = useState<Date | undefined>(
     undefined
   );
+  const { toast } = useToast();
 
   useEffect(() => {
     if (lendAmount) {
@@ -79,16 +82,21 @@ const FinancePage: React.FC = () => {
 
   const handleBorrowSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log("Borrow request:", {
       borrowTitle,
       borrowAmount,
       borrowDeadline,
     });
-    setIsDialogOpen(false);
+    setBorrowDialogOpen(false);
     setBorrowTitle("");
     setBorrowAmount("");
     setBorrowDeadline(undefined);
+    toast({
+      title: "Request Created",
+      description: "Your borrowing request has been successfully created.",
+      duration: 3000,
+      className: "bg-[#4CAF50] text-white rounded-xl",
+    });
   };
 
   const handleLendSubmit = (e: React.FormEvent) => {
@@ -99,14 +107,26 @@ const FinancePage: React.FC = () => {
       if (lendAmountNumber > 0 && lendAmountNumber <= maxLendAmount) {
         console.log(`Lending ${lendAmount} to request ${selectedRequest.id}`);
         console.log(`User receives ${roziCoins} $ROZI coins`);
-        // Update the fulfilled amount (this should be done on the server in a real app)
         selectedRequest.fulfilled += lendAmountNumber;
+        setLendDialogOpen(false);
+        toast({
+          title: "Lending Successful",
+          description: `You have successfully lent ₹${lendAmountNumber.toLocaleString()} and received ${roziCoins} $ROZI coins.`,
+          duration: 3000,
+          className: "bg-[#FFA500] text-white rounded-xl",
+        });
       } else {
-        console.log("Invalid lending amount");
+        toast({
+          title: "Lending Failed",
+          description: "Invalid lending amount. Please try again.",
+          duration: 3000,
+          className: "bg-red-500 text-white rounded-xl",
+        });
       }
     }
     setSelectedRequest(null);
     setLendAmount("");
+    setLendDialogOpen(false); // Close the dialog in all cases
   };
 
   const formatDate = (date: Date) => {
@@ -118,13 +138,13 @@ const FinancePage: React.FC = () => {
       <div className="container mx-auto p-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Active Lending Requests</h2>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={borrowDialogOpen} onOpenChange={setBorrowDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-[#FFA500] hover:bg-[#FF8C00] text-white rounded-xl">
                 Borrow Money 🙋
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md w-[90%] rounded-xl p-6">
+            <DialogContent className="max-w-md w-[90%] rounded-xl p-6 bg-white">
               <DialogHeader>
                 <DialogTitle className="text-[#FFA500] text-2xl mb-4">
                   Create a Borrowing Request
@@ -173,7 +193,7 @@ const FinancePage: React.FC = () => {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start text-left font-normal ${
+                        className={`w-full justify-start text-left font-normal rounded-xl ${
                           !borrowDeadline && "text-muted-foreground"
                         }`}
                       >
@@ -185,7 +205,10 @@ const FinancePage: React.FC = () => {
                         )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent
+                      className="w-auto p-0 rounded-xl"
+                      align="start"
+                    >
                       <CalendarComponent
                         mode="single"
                         selected={borrowDeadline}
@@ -237,16 +260,22 @@ const FinancePage: React.FC = () => {
                     ₹{request.fulfilled.toLocaleString()} of ₹
                     {request.amount.toLocaleString()} fulfilled
                   </div>
-                  <Dialog>
+                  <Dialog
+                    open={lendDialogOpen}
+                    onOpenChange={setLendDialogOpen}
+                  >
                     <DialogTrigger asChild>
                       <Button
                         className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white rounded-xl"
-                        onClick={() => setSelectedRequest(request)}
+                        onClick={() => {
+                          setSelectedRequest(request);
+                          setLendDialogOpen(true);
+                        }}
                       >
                         Lend Money 🤝
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-md w-[90%] rounded-xl p-6">
+                    <DialogContent className="max-w-md w-[90%] rounded-xl p-6 bg-white">
                       <DialogHeader>
                         <DialogTitle className="text-[#4CAF50] text-2xl mb-4">
                           Lend Money

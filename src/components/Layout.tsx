@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { Home, Briefcase, PiggyBank, Users, User } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Toaster } from "@/components/ui/toaster";
 
 interface LayoutProps {
   children: ReactNode;
@@ -48,6 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFFF0] text-gray-800">
+      <Toaster />
       <main className="flex-1 p-4 pb-20">{children}</main>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4CAF50]">
         <div className="max-w-md mx-auto flex justify-around items-center h-16 px-2">
