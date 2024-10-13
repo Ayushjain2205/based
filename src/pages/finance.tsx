@@ -135,7 +135,7 @@ const FinancePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Active Lending Requests</h2>
           <Dialog open={borrowDialogOpen} onOpenChange={setBorrowDialogOpen}>
