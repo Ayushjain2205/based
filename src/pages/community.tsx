@@ -100,11 +100,37 @@ const CommunityVoting: React.FC = () => {
   const { toast } = useToast();
 
   const handleVote = (proposalId: number, voteType: "yes" | "no") => {
-    console.log(`Voted ${voteType} on proposal ${proposalId}`);
+    const proposal = proposals.find((p) => p.id === proposalId);
+    if (!proposal) return;
+
+    const votes = proposal.userVotingPower;
+    console.log(
+      `Voted ${voteType} on proposal ${proposalId} with ${votes} votes`
+    );
+
     toast({
       title: "Vote Recorded",
-      description: `Your ${voteType} vote has been successfully recorded.`,
-      duration: 3000,
+      className: "rounded-xl",
+      description: (
+        <div className="flex items-center">
+          <div
+            className={`w-6 h-6 rounded-full mr-2 flex items-center justify-center ${
+              voteType === "yes" ? "bg-[#4CAF50]" : "bg-red-500"
+            }`}
+          >
+            {voteType === "yes" ? (
+              <CheckCircle className="w-4 h-4 text-white" />
+            ) : (
+              <XCircle className="w-4 h-4 text-white" />
+            )}
+          </div>
+          <span className="rounded-xl">
+            You voted <strong>{voteType}</strong> with{" "}
+            <strong>{votes} votes</strong> ({votes} $ROZI)
+          </span>
+        </div>
+      ),
+      duration: 5000,
     });
   };
 
