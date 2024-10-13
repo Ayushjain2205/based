@@ -13,13 +13,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coins, Calendar } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 interface LendingRequest {
   id: number;
   title: string;
   amount: number;
   fulfilled: number;
-  deadline: string;
+  deadline: Date;
 }
 
 const lendingRequests: LendingRequest[] = [
@@ -28,21 +35,21 @@ const lendingRequests: LendingRequest[] = [
     title: "New sewing machine for tailoring business",
     amount: 15000,
     fulfilled: 10000,
-    deadline: "2024-11-15",
+    deadline: new Date("2024-11-15"),
   },
   {
     id: 2,
     title: "Education fees for computer course",
     amount: 25000,
     fulfilled: 5000,
-    deadline: "2024-12-01",
+    deadline: new Date("2024-12-01"),
   },
   {
     id: 3,
     title: "Stock for small grocery store",
     amount: 50000,
     fulfilled: 30000,
-    deadline: "2024-10-30",
+    deadline: new Date("2024-10-30"),
   },
 ];
 
@@ -52,41 +59,52 @@ const FinancePage: React.FC = () => {
     null
   );
   const [lendAmount, setLendAmount] = useState<string>("");
+  const [borrowTitle, setBorrowTitle] = useState("");
+  const [borrowAmount, setBorrowAmount] = useState("");
+  const [borrowDeadline, setBorrowDeadline] = useState<Date | undefined>(
+    undefined
+  );
 
   const handleBorrowSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
+    console.log("Borrow request:", {
+      borrowTitle,
+      borrowAmount,
+      borrowDeadline,
+    });
     setIsDialogOpen(false);
+    setBorrowTitle("");
+    setBorrowAmount("");
+    setBorrowDeadline(undefined);
   };
 
   const handleLendSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle lending logic here
-    console.log(`Lending ${lendAmount} to request ${selectedRequest?.id}`);
+    if (selectedRequest) {
+      const lendAmountNumber = parseFloat(lendAmount);
+      const maxLendAmount = selectedRequest.amount - selectedRequest.fulfilled;
+      if (lendAmountNumber > 0 && lendAmountNumber <= maxLendAmount) {
+        console.log(`Lending ${lendAmount} to request ${selectedRequest.id}`);
+        // Update the fulfilled amount (this should be done on the server in a real app)
+        selectedRequest.fulfilled += lendAmountNumber;
+      } else {
+        console.log("Invalid lending amount");
+      }
+    }
     setSelectedRequest(null);
     setLendAmount("");
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+  const formatDate = (date: Date) => {
+    return format(date, "dd MMM yyyy");
   };
 
   return (
     <Layout>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6 text-[#FFA500]">
-          Community Funding Platform 💰
-        </h1>
-
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-[#4CAF50]">
-            Active Lending Requests
-          </h2>
+          <h2 className="text-xl font-bold">Active Lending Requests</h2>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-[#FFA500] hover:bg-[#FF8C00] text-white rounded-xl">
@@ -109,6 +127,8 @@ const FinancePage: React.FC = () => {
                   </Label>
                   <Input
                     id="title"
+                    value={borrowTitle}
+                    onChange={(e) => setBorrowTitle(e.target.value)}
                     placeholder="Enter a title for your request"
                     className="rounded-xl mt-1"
                   />
@@ -123,6 +143,8 @@ const FinancePage: React.FC = () => {
                   <Input
                     id="amount"
                     type="number"
+                    value={borrowAmount}
+                    onChange={(e) => setBorrowAmount(e.target.value)}
                     placeholder="Enter amount"
                     className="rounded-xl mt-1"
                   />
@@ -134,11 +156,31 @@ const FinancePage: React.FC = () => {
                   >
                     Deadline
                   </Label>
-                  <Input
-                    id="deadline"
-                    type="date"
-                    className="rounded-xl mt-1"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start text-left font-normal rounded-xl ${
+                          !borrowDeadline && "text-muted-foreground"
+                        }`}
+                      >
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {borrowDeadline ? (
+                          formatDate(borrowDeadline)
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={borrowDeadline}
+                        onSelect={setBorrowDeadline}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <Button
                   type="submit"
@@ -232,6 +274,12 @@ const FinancePage: React.FC = () => {
                         <Button
                           type="submit"
                           className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white rounded-xl mt-4"
+                          disabled={
+                            !selectedRequest ||
+                            parseFloat(lendAmount) <= 0 ||
+                            parseFloat(lendAmount) >
+                              selectedRequest.amount - selectedRequest.fulfilled
+                          }
                         >
                           Confirm Lending 💖
                         </Button>
