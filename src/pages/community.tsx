@@ -175,13 +175,16 @@ const CommunityVoting: React.FC = () => {
                 <span>
                   {communities.find((c) => c.id === selectedCommunity)?.name}
                 </span>
-                <Badge
-                  variant="secondary"
-                  className="bg-[#4CAF50] text-white flex items-center rounded-xl"
-                >
-                  <Users className="w-4 h-4 mr-1" />
-                  {communities.find((c) => c.id === selectedCommunity)?.members}
-                </Badge>
+
+                <div className="flex items-center bg-gray-100 rounded-full px-3 py-1">
+                  <Users className="w-4 h-4 mr-1 text-[#4CAF50]" />
+                  <span className="text-sm font-semibold text-[#4CAF50]">
+                    {
+                      communities.find((c) => c.id === selectedCommunity)
+                        ?.members
+                    }
+                  </span>
+                </div>
               </CardTitle>
             </CardHeader>
           </Card>
