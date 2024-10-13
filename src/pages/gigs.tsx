@@ -160,7 +160,7 @@ const GigsPage = () => {
   return (
     <Layout>
       <div className="container mx-auto ">
-        <h1 className="text-xl font-semibold mb-4 text-left text-black">
+        <h1 className="text-xl font-bold mb-4 text-left text-black">
           Available Gigs
         </h1>
 
