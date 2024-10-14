@@ -11,16 +11,36 @@ import {
   Star,
   Coins,
   Gauge,
-  Wrench,
   Calendar,
-  DollarSign,
+  Banknote,
   Upload,
   Briefcase,
+  LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-const profileData = {
+interface ProfileData {
+  name: string;
+  role: string;
+  rating: number;
+  platformScore: number;
+  roziCoins: number;
+}
+
+interface DailyData {
+  date: string;
+  gigs: number;
+  earnings: number;
+}
+
+interface ActivityData {
+  totalGigs: number;
+  totalEarnings: number;
+  dailyData: DailyData[];
+}
+
+const profileData: ProfileData = {
   name: "Rahul Singh",
   role: "Plumber",
   rating: 4.8,
@@ -28,7 +48,7 @@ const profileData = {
   roziCoins: 1500,
 };
 
-const generateRandomData = (year: number, month: number) => {
+const generateRandomData = (year: number, month: number): DailyData[] => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   return Array.from({ length: daysInMonth }, (_, i) => ({
     date: new Date(year, month, i + 1).toISOString().split("T")[0],
@@ -37,7 +57,17 @@ const generateRandomData = (year: number, month: number) => {
   }));
 };
 
-const MetricCard = ({ icon: Icon, value, label }) => (
+interface MetricCardProps {
+  icon: LucideIcon;
+  value: string | number;
+  label: string;
+}
+
+const MetricCard: React.FC<MetricCardProps> = ({
+  icon: Icon,
+  value,
+  label,
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -55,11 +85,11 @@ const MetricCard = ({ icon: Icon, value, label }) => (
 export default function MePage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [activityData, setActivityData] = useState<{
-    totalGigs: number;
-    totalEarnings: number;
-    dailyData: { date: string; gigs: number; earnings: number }[];
-  }>({ totalGigs: 0, totalEarnings: 0, dailyData: [] });
+  const [activityData, setActivityData] = useState<ActivityData>({
+    totalGigs: 0,
+    totalEarnings: 0,
+    dailyData: [],
+  });
   const [currentMetricIndex, setCurrentMetricIndex] = useState(0);
 
   useEffect(() => {
@@ -96,7 +126,7 @@ export default function MePage() {
     }
   };
 
-  const getActivityColor = (gigs: number) => {
+  const getActivityColor = (gigs: number): string => {
     if (gigs >= 3) return "bg-[#FFA500]";
     if (gigs === 2) return "bg-[#FFB733]";
     if (gigs === 1) return "bg-[#FFC966]";
@@ -141,20 +171,20 @@ export default function MePage() {
               : getActivityColor(dayData?.gigs || 0)
           } hover:opacity-90 rounded-md`}
           onClick={() => setSelectedDate(date)}
-        />
+        ></Button>
       );
     }
 
     return days;
   };
 
-  const metrics = [
+  const metrics: MetricCardProps[] = [
     { icon: Star, value: profileData.rating.toFixed(1), label: "Rating" },
     { icon: Gauge, value: profileData.platformScore, label: "Trust Score" },
     { icon: Coins, value: profileData.roziCoins, label: "$ROZI" },
     { icon: Briefcase, value: activityData.totalGigs, label: "Total Gigs" },
     {
-      icon: DollarSign,
+      icon: Banknote,
       value: `₹${activityData.totalEarnings.toLocaleString()}`,
       label: "Total Earnings",
     },
@@ -261,7 +291,7 @@ export default function MePage() {
                       )?.gigs || 0}
                     </p>
                     <p className="text-gray-700">
-                      <DollarSign className="inline-block w-5 h-5 mr-2 text-[#FFA500]" />
+                      <Banknote className="inline-block w-5 h-5 mr-2 text-[#FFA500]" />
                       Earnings: ₹
                       {activityData.dailyData
                         .find(
