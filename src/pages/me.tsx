@@ -114,7 +114,7 @@ export default function MePage() {
             isSelected
               ? "bg-[#4CAF50] hover:bg-[#4CAF50] text-white"
               : getActivityColor(dayData?.gigs || 0)
-          } hover:opacity-80 rounded-lg`}
+          } hover:opacity-90 rounded-md`}
           onClick={() => setSelectedDate(date)}
         />
       );
