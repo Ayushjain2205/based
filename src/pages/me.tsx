@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import ImportDataSection from "@/components/functional/ImportDataSection";
 
 interface ProfileData {
   name: string;
@@ -306,21 +307,7 @@ export default function MePage() {
             </Card>
           </TabsContent>
           <TabsContent value="import">
-            <Card className="bg-white border-2 border-[#FFA500]">
-              <CardContent className="p-4">
-                <h2 className="text-xl font-bold mb-4 text-gray-800">
-                  Import Data
-                </h2>
-                <p className="mb-4 text-gray-700">
-                  Use this section to import your activity data from other
-                  platforms.
-                </p>
-                <Button className="w-full bg-[#FFA500] hover:bg-[#FFB733] text-white">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Import Data
-                </Button>
-              </CardContent>
-            </Card>
+            <ImportDataSection />
           </TabsContent>
         </Tabs>
       </div>
