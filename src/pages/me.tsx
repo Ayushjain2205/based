@@ -15,11 +15,13 @@ import {
   Calendar,
   DollarSign,
   Upload,
+  Briefcase,
 } from "lucide-react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
 const profileData = {
-  name: "John Doe",
+  name: "Rahul Singh",
   role: "Plumber",
   rating: 4.8,
   platformScore: 92,
@@ -35,6 +37,21 @@ const generateRandomData = (year: number, month: number) => {
   }));
 };
 
+const MetricCard = ({ icon: Icon, value, label }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    className="flex items-center space-x-2"
+  >
+    <Icon className="w-6 h-6 text-[#FFA500]" />
+    <div>
+      <span className="text-lg font-semibold">{value}</span>
+      <span className="text-sm text-gray-600 block">{label}</span>
+    </div>
+  </motion.div>
+);
+
 export default function MePage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -43,6 +60,7 @@ export default function MePage() {
     totalEarnings: number;
     dailyData: { date: string; gigs: number; earnings: number }[];
   }>({ totalGigs: 0, totalEarnings: 0, dailyData: [] });
+  const [currentMetricIndex, setCurrentMetricIndex] = useState(0);
 
   useEffect(() => {
     const dailyData = generateRandomData(
@@ -53,6 +71,13 @@ export default function MePage() {
     const totalEarnings = dailyData.reduce((sum, day) => sum + day.earnings, 0);
     setActivityData({ totalGigs, totalEarnings, dailyData });
   }, [currentMonth]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentMetricIndex((prevIndex) => (prevIndex + 1) % 5);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const prevMonth = () => {
     setCurrentMonth(
@@ -123,51 +148,38 @@ export default function MePage() {
     return days;
   };
 
+  const metrics = [
+    { icon: Star, value: profileData.rating.toFixed(1), label: "Rating" },
+    { icon: Gauge, value: profileData.platformScore, label: "Trust Score" },
+    { icon: Coins, value: profileData.roziCoins, label: "$ROZI" },
+    { icon: Briefcase, value: activityData.totalGigs, label: "Total Gigs" },
+    {
+      icon: DollarSign,
+      value: `₹${activityData.totalEarnings.toLocaleString()}`,
+      label: "Total Earnings",
+    },
+  ];
+
   return (
     <Layout>
-      <div className="container mx-auto pb-4 px-4">
-        <Card className="mb-6 bg-white border-2 border-[#FFA500]">
+      <div className="container mx-auto pb-4">
+        <Card className="mb-6 bg-white border-2 border-[#000]">
           <CardContent className="p-4">
-            <div className="flex items-center space-x-4">
-              <Image
-                src="/placeholder.svg?height=64&width=64"
-                alt="profile"
-                width={64}
-                height={64}
-                className="rounded-full"
-              />
-              <div>
-                <h2 className="text-xl font-bold text-[#FFA500]">
-                  {profileData.name}
-                </h2>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Wrench className="w-4 h-4 mr-1 text-[#FFA500]" />
-                  {profileData.role}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Image src="/avatar.svg" alt="profile" width={32} height={32} />
+                <div>
+                  <h2 className="text-xl font-bold text-[#000]">
+                    {profileData.name}
+                  </h2>
                 </div>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4 mt-4">
-              <div className="flex flex-col items-center">
-                <Star className="w-6 h-6 text-[#FFA500] mb-1" />
-                <span className="text-sm font-semibold">
-                  {profileData.rating.toFixed(1)}
-                </span>
-                <span className="text-xs text-gray-600">Rating</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <Gauge className="w-6 h-6 text-[#FFA500] mb-1" />
-                <span className="text-sm font-semibold">
-                  {profileData.platformScore}
-                </span>
-                <span className="text-xs text-gray-600">Trust Score</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <Coins className="w-6 h-6 text-[#FFA500] mb-1" />
-                <span className="text-sm font-semibold">
-                  {profileData.roziCoins}
-                </span>
-                <span className="text-xs text-gray-600">$ROZI</span>
-              </div>
+              <AnimatePresence mode="wait">
+                <MetricCard
+                  key={currentMetricIndex}
+                  {...metrics[currentMetricIndex]}
+                />
+              </AnimatePresence>
             </div>
           </CardContent>
         </Card>
@@ -178,7 +190,7 @@ export default function MePage() {
               value="activity"
               className="flex-1 data-[state=active]:bg-[#FFA500] data-[state=active]:text-white"
             >
-              Activity & Earnings 📊
+              Activity 📊
             </TabsTrigger>
             <TabsTrigger
               value="import"
@@ -190,67 +202,47 @@ export default function MePage() {
           <TabsContent value="activity">
             <Card className="bg-white">
               <CardContent className="p-4">
-                <div className="flex justify-between mb-4">
-                  <p className="text-lg">
-                    <span className="font-semibold text-[#4CAF50]">
-                      Total Gigs:
-                    </span>{" "}
-                    {activityData.totalGigs} 🛠️
-                  </p>
-                  <p className="text-lg">
-                    <span className="font-semibold text-[#4CAF50]">
-                      Total Earnings:
-                    </span>{" "}
-                    ₹{activityData.totalEarnings.toLocaleString()} 💰
-                  </p>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                  Daily Activity
+                </h3>
+                <div className="flex justify-between items-center mb-4">
+                  <Button
+                    onClick={prevMonth}
+                    variant="outline"
+                    size="icon"
+                    className="border-[#FFA500] text-[#FFA500] hover:bg-[#FFA500] hover:text-white"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <h4 className="text-md font-semibold text-gray-800">
+                    {currentMonth.toLocaleString("default", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </h4>
+                  <Button
+                    onClick={nextMonth}
+                    variant="outline"
+                    size="icon"
+                    className="border-[#FFA500] text-[#FFA500] hover:bg-[#FFA500] hover:text-white"
+                    disabled={currentMonth.getMonth() === new Date().getMonth()}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2 text-gray-800">
-                    Daily Activity
-                  </h3>
-                  <div className="flex justify-between items-center mb-4">
-                    <Button
-                      onClick={prevMonth}
-                      variant="outline"
-                      size="icon"
-                      className="border-[#FFA500] text-[#FFA500] hover:bg-[#FFA500] hover:text-white"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <h4 className="text-md font-semibold text-gray-800">
-                      {currentMonth.toLocaleString("default", {
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </h4>
-                    <Button
-                      onClick={nextMonth}
-                      variant="outline"
-                      size="icon"
-                      className="border-[#FFA500] text-[#FFA500] hover:bg-[#FFA500] hover:text-white"
-                      disabled={
-                        currentMonth.getMonth() === new Date().getMonth()
-                      }
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-7 gap-1 mb-2">
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                      (day) => (
-                        <div
-                          key={day}
-                          className="text-center text-sm font-medium text-[#4CAF50]"
-                        >
-                          {day}
-                        </div>
-                      )
-                    )}
-                  </div>
-                  <div className="grid grid-cols-7 gap-1">
-                    {renderCalendar()}
-                  </div>
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                    (day) => (
+                      <div
+                        key={day}
+                        className="text-center text-sm font-medium text-[#4CAF50]"
+                      >
+                        {day}
+                      </div>
+                    )
+                  )}
                 </div>
+                <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
                 {selectedDate && (
                   <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow">
                     <h3 className="text-lg font-semibold mb-2 text-gray-800">
