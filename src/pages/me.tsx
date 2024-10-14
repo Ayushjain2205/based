@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-// Mock data for the profile
 const profileData = {
   name: "John Doe",
   role: "Plumber",
@@ -27,17 +26,13 @@ const profileData = {
   roziCoins: 1500,
 };
 
-// Function to generate random gigs and earnings
 const generateRandomData = (year: number, month: number) => {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  return Array.from({ length: daysInMonth }, (_, i) => {
-    const gigs = Math.floor(Math.random() * 4); // 0 to 3 gigs
-    return {
-      date: new Date(year, month, i + 1).toISOString().split("T")[0],
-      gigs,
-      earnings: gigs * Math.floor(Math.random() * 500 + 300), // 300 to 800 per gig
-    };
-  });
+  return Array.from({ length: daysInMonth }, (_, i) => ({
+    date: new Date(year, month, i + 1).toISOString().split("T")[0],
+    gigs: Math.floor(Math.random() * 4),
+    earnings: Math.floor(Math.random() * 2000 + 500),
+  }));
 };
 
 export default function MePage() {
@@ -76,17 +71,6 @@ export default function MePage() {
     }
   };
 
-  const daysInMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  ).getDate();
-  const firstDayOfMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth(),
-    1
-  ).getDay();
-
   const getActivityColor = (gigs: number) => {
     if (gigs >= 3) return "bg-[#FFA500]";
     if (gigs === 2) return "bg-[#FFB733]";
@@ -94,45 +78,100 @@ export default function MePage() {
     return "bg-[#FFE0B2]";
   };
 
+  const renderCalendar = () => {
+    const firstDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    ).getDay();
+    const daysInMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0
+    ).getDate();
+    const days = [];
+
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(<div key={`empty-${i}`} className="h-10" />);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        day
+      );
+      const dayData = activityData.dailyData.find(
+        (d) => d.date === date.toISOString().split("T")[0]
+      );
+      const isSelected =
+        selectedDate && date.toDateString() === selectedDate.toDateString();
+
+      days.push(
+        <Button
+          key={day}
+          className={`h-10 w-full ${
+            isSelected
+              ? "bg-[#4CAF50] hover:bg-[#4CAF50] text-white"
+              : getActivityColor(dayData?.gigs || 0)
+          } hover:opacity-80 rounded-lg`}
+          onClick={() => setSelectedDate(date)}
+        />
+      );
+    }
+
+    return days;
+  };
+
   return (
     <Layout>
       <div className="container mx-auto pb-4 px-4">
-        <Card className="mb-6 bg-white border-2 border-black">
-          <CardContent className="p-2">
-            <div className="flex items-center space-x-3">
+        <Card className="mb-6 bg-white border-2 border-[#FFA500]">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-4">
               <Image
-                src="/avatar.svg"
+                src="/placeholder.svg?height=64&width=64"
                 alt="profile"
-                width={32}
-                height={32}
+                width={64}
+                height={64}
                 className="rounded-full"
               />
               <div>
-                <h2 className="text-lg font-bold text-[#FFA500]">
+                <h2 className="text-xl font-bold text-[#FFA500]">
                   {profileData.name}
                 </h2>
-                <div className="flex items-center text-xs text-gray-600">
-                  <Wrench className="w-3 h-3 mr-1 text-[#FFA500]" />
+                <div className="flex items-center text-sm text-gray-600">
+                  <Wrench className="w-4 h-4 mr-1 text-[#FFA500]" />
                   {profileData.role}
                 </div>
               </div>
             </div>
-            <div className="flex justify-between mt-2 text-xs">
-              <div className="flex items-center">
-                <Star className="w-4 h-4 text-[#FFA500] mr-1" />
-                <span>{profileData.rating.toFixed(1)}</span>
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              <div className="flex flex-col items-center">
+                <Star className="w-6 h-6 text-[#FFA500] mb-1" />
+                <span className="text-sm font-semibold">
+                  {profileData.rating.toFixed(1)}
+                </span>
+                <span className="text-xs text-gray-600">Rating</span>
               </div>
-              <div className="flex items-center">
-                <Gauge className="w-4 h-4 text-[#FFA500] mr-1" />
-                <span>{profileData.platformScore}</span>
+              <div className="flex flex-col items-center">
+                <Gauge className="w-6 h-6 text-[#FFA500] mb-1" />
+                <span className="text-sm font-semibold">
+                  {profileData.platformScore}
+                </span>
+                <span className="text-xs text-gray-600">Trust Score</span>
               </div>
-              <div className="flex items-center">
-                <Coins className="w-4 h-4 text-[#FFA500] mr-1" />
-                <span>{profileData.roziCoins}</span>
+              <div className="flex flex-col items-center">
+                <Coins className="w-6 h-6 text-[#FFA500] mb-1" />
+                <span className="text-sm font-semibold">
+                  {profileData.roziCoins}
+                </span>
+                <span className="text-xs text-gray-600">$ROZI</span>
               </div>
             </div>
           </CardContent>
         </Card>
+
         <Tabs defaultValue="activity" className="mt-6">
           <TabsList className="w-full flex bg-white border-2 border-[#FFA500] p-1">
             <TabsTrigger
@@ -151,9 +190,6 @@ export default function MePage() {
           <TabsContent value="activity">
             <Card className="bg-white">
               <CardContent className="p-4">
-                <h2 className="text-xl font-bold mb-4 text-gray-800">
-                  Activity & Earnings Overview
-                </h2>
                 <div className="flex justify-between mb-4">
                   <p className="text-lg">
                     <span className="font-semibold text-[#4CAF50]">
@@ -212,24 +248,17 @@ export default function MePage() {
                     )}
                   </div>
                   <div className="grid grid-cols-7 gap-1">
-                    {Array.from({ length: firstDayOfMonth }).map((_, index) => (
-                      <div key={`empty-${index}`} className="h-10" />
-                    ))}
-                    {activityData.dailyData.map((day, index) => (
-                      <Button
-                        key={index}
-                        className={`h-10 w-full ${getActivityColor(
-                          day.gigs
-                        )} hover:opacity-80 rounded-lg`}
-                        onClick={() => setSelectedDate(new Date(day.date))}
-                      />
-                    ))}
+                    {renderCalendar()}
                   </div>
                 </div>
                 {selectedDate && (
                   <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow">
                     <h3 className="text-lg font-semibold mb-2 text-gray-800">
-                      Activity for {selectedDate.toLocaleDateString()}
+                      Activity for{" "}
+                      {selectedDate.toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </h3>
                     <p className="text-gray-700 mb-2">
                       <Calendar className="inline-block w-5 h-5 mr-2 text-[#FFA500]" />
