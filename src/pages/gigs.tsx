@@ -259,7 +259,7 @@ const GigsPage = () => {
             >
               <CardContent className="p-3">
                 <div className="flex justify-between items-start mb-2">
-                  <h2 className="text-lg font-semibold text-[#FFA500] pr-2">
+                  <h2 className="text-lg font-semibold text-[#000] pr-2">
                     {gig.title}
                   </h2>
                   {gig.isRecurring ? (
