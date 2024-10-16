@@ -121,10 +121,43 @@ const SplashScreen: React.FC<SplashScreenProps> = ({}) => {
   );
 };
 
-export default function Component() {
+const DesktopView: React.FC = () => (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#FFFFF0] to-white text-gray-800 p-4">
+    <div className="flex flex-col items-center justify-center max-w-md text-center">
+      <h1 className="text-3xl font-bold text-[#FFA500] mb-4">Rozi</h1>
+      <p className="text-lg mb-8">
+        Please open this app on a mobile device for the best experience.
+      </p>
+      <Image
+        src="/logo.svg"
+        alt="Rozi Logo"
+        width={100}
+        height={100}
+        className="mx-auto"
+      />
+    </div>
+  </div>
+);
+
+export default function Home() {
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FFFFF0]">
-      <SplashScreen />
+      {isMobile ? <SplashScreen /> : <DesktopView />}
     </div>
   );
 }
