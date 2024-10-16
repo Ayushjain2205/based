@@ -54,10 +54,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#4CAF50]">
         <div className="max-w-md mx-auto flex justify-around items-center h-16 px-2">
           <NavItem
-            href="/"
+            href="/home"
             icon={<Home className="w-5 h-5" />}
             label="Home"
-            isActive={router.pathname === "/"}
+            isActive={router.pathname === "/home"}
           />
           <NavItem
             href="/gigs"
