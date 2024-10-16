@@ -6,6 +6,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   DollarSign,
+  Banknote,
 } from "lucide-react";
 
 interface Transaction {
@@ -14,6 +15,7 @@ interface Transaction {
   amount: number;
   currency: string;
   counterparty: string;
+  gig: string;
   date: string;
 }
 
@@ -23,32 +25,36 @@ const transactions: Transaction[] = [
     type: "received",
     amount: 500,
     currency: "₹",
-    counterparty: "John Doe",
-    date: "2023-05-15",
+    counterparty: "john.base.eth",
+    gig: "Fix a leaky faucet",
+    date: "October 15, 2023",
   },
   {
     id: "2",
     type: "sent",
     amount: 200,
     currency: "₹",
-    counterparty: "Jane Smith",
-    date: "2023-05-14",
+    counterparty: "jane.base.eth",
+    gig: "Install ceiling fan",
+    date: "October 14, 2023",
   },
   {
     id: "3",
     type: "received",
     amount: 1000,
     currency: "₹",
-    counterparty: "Acme Corp",
-    date: "2023-05-13",
+    counterparty: "acme.base.eth",
+    gig: "Paint living room",
+    date: "October 13, 2023",
   },
   {
     id: "4",
     type: "sent",
     amount: 150,
     currency: "₹",
-    counterparty: "Coffee Shop",
-    date: "2023-05-12",
+    counterparty: "coffee.base.eth",
+    gig: "Weekly pool maintenance",
+    date: "October 8, 2023",
   },
 ];
 
@@ -57,6 +63,7 @@ const TransactionTile: React.FC<Transaction> = ({
   amount,
   currency,
   counterparty,
+  gig,
   date,
 }) => (
   <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between hover:shadow-lg transition-shadow duration-200">
@@ -67,16 +74,16 @@ const TransactionTile: React.FC<Transaction> = ({
         }`}
       >
         {type === "received" ? (
-          <ArrowUpRight className="w-6 h-6 text-[#4CAF50]" />
+          <ArrowDownRight className="w-6 h-6 text-[#4CAF50]" />
         ) : (
-          <ArrowDownRight className="w-6 h-6 text-red-500" />
+          <ArrowUpRight className="w-6 h-6 text-red-500" />
         )}
       </div>
       <div>
-        <span className="font-semibold text-gray-800 text-lg">
-          {type === "received" ? "Received from" : "Sent to"}
+        <span className="font-semibold text-gray-800 text-base">
+          {counterparty}
         </span>
-        <p className="text-sm text-gray-600">{counterparty}</p>
+        <p className="text-sm text-gray-600">{gig}</p>
         <p className="text-xs text-gray-500">{date}</p>
       </div>
     </div>
@@ -102,7 +109,7 @@ const PaymentSection: React.FC = () => {
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">Your Balance</h2>
-              <DollarSign className="w-8 h-8" />
+              <Banknote className="w-8 h-8" />
             </div>
             <p className="text-4xl font-bold mb-2">₹2,150</p>
             <p className="text-sm opacity-80">Available balance</p>
