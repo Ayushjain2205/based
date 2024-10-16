@@ -6,8 +6,8 @@ const Home = () => {
   return (
     <Layout>
       <ProfileCard
-        name="Rahul Singh"
-        baseName="rahul.apt"
+        name="Ayush Jain"
+        baseName="iyush.base.eth"
         role="Plumber"
         rating={4.8}
         platformScore={750}
