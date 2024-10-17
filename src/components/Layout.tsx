@@ -102,7 +102,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon, label, isActive }) => (
     className="relative flex flex-col items-center justify-center"
   >
     <motion.div
-      className={`flex flex-col items-center justify-center w-12 h-12 ${
+      className={`flex flex-col items-center justify-center  w-12 h-12 ${
         isActive ? "text-white" : "text-gray-600"
       }`}
       whileHover={{ scale: 1.1 }}
@@ -116,7 +116,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon, label, isActive }) => (
         {icon}
       </div>
       <motion.span
-        className={`text-[10px] font-medium mt-1 ${
+        className={`text-[10px] font-semibold mt-1 ${
           isActive ? "text-[#FFA500]" : "text-gray-600"
         }`}
         initial={{ opacity: 0 }}
