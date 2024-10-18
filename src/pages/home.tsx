@@ -8,7 +8,7 @@ const Home = () => {
       <ProfileCard
         name="Ayush Jain"
         baseName="iyush.base.eth"
-        role="Plumber"
+        roles={["Plumbing", "Electrical"]}
         rating={4.8}
         platformScore={750}
         roziCoins={1000}

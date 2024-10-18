@@ -6,16 +6,40 @@ import Image from "next/image";
 interface ProfileCardProps {
   name: string;
   baseName: string;
-  role: string;
+  roles: string[];
   rating: number;
   platformScore: number;
   roziCoins: number;
 }
 
+const getCategoryEmoji = (category: string) => {
+  const emojis: { [key: string]: string } = {
+    Plumbing: "🚽",
+    Electrical: "⚡",
+    Painting: "🎨",
+    Carpentry: "🔨",
+    Maintenance: "🔧",
+    Gardening: "🌱",
+  };
+  return emojis[category] || "🛠️";
+};
+
+const getCategoryColor = (category: string) => {
+  const colors: { [key: string]: string } = {
+    Plumbing: "bg-blue-100 text-blue-800",
+    Electrical: "bg-yellow-100 text-yellow-800",
+    Painting: "bg-green-100 text-green-800",
+    Carpentry: "bg-red-100 text-red-800",
+    Maintenance: "bg-purple-100 text-purple-800",
+    Gardening: "bg-emerald-100 text-emerald-800",
+  };
+  return colors[category] || "bg-gray-100 text-gray-800";
+};
+
 export default function ProfileCard({
   name,
   baseName,
-  role,
+  roles,
   rating,
   platformScore,
   roziCoins,
@@ -28,11 +52,19 @@ export default function ProfileCard({
             <Image src="/avatar.svg" alt="profile" width={64} height={64} />
             <div>
               <h2 className="text-lg font-bold text-black">{name}</h2>
-              <div className="flex items-center text-sm text-gray-600">
-                <Wrench className="w-4 h-4 mr-1 text-[#FFA500]" />
-                {role}
+              <div className="flex flex-wrap gap-1 mt-1">
+                {roles.map((role, index) => (
+                  <span
+                    key={index}
+                    className={`text-xs font-semibold px-2 py-1 rounded-full ${getCategoryColor(
+                      role
+                    )}`}
+                  >
+                    {getCategoryEmoji(role)} {role}
+                  </span>
+                ))}
               </div>
-              <div className="flex items-center mt-1">
+              <div className="flex items-center mt-2">
                 <span className="text-sm font-semibold text-black mr-2">
                   {baseName}
                 </span>
