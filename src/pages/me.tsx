@@ -31,7 +31,7 @@ interface ProfileData {
 }
 
 const profileData: ProfileData = {
-  name: "Rahul Singh",
+  name: "Ayush Jain",
   role: "Plumber",
   rating: 4.8,
   platformScore: 92,
