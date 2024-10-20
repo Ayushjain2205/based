@@ -77,8 +77,8 @@ export default function MePage() {
     { icon: Star, value: profileData.rating.toFixed(1), label: "Rating" },
     { icon: Gauge, value: profileData.platformScore, label: "Trust Score" },
     { icon: Coins, value: profileData.roziCoins, label: "$ROZI" },
-    { icon: Briefcase, value: "N/A", label: "Total Gigs" },
-    { icon: Banknote, value: "N/A", label: "Total Earnings" },
+    { icon: Briefcase, value: "65", label: "Total Gigs" },
+    { icon: Banknote, value: "₹32,505", label: "Total Earnings" },
   ];
 
   return (
