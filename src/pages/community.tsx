@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
 import {
   Coins,
   Users,
@@ -56,7 +56,7 @@ const communities: Community[] = [
   },
 ];
 
-const proposals: Proposal[] = [
+const initialProposals: Proposal[] = [
   {
     id: 1,
     title: "Implement Micro-Insurance for Gig Workers",
@@ -174,16 +174,29 @@ const CommunityVoting: React.FC = () => {
     communities[0].id
   );
   const [expandedProposal, setExpandedProposal] = useState<number | null>(null);
+  const [proposals, setProposals] = useState<Proposal[]>(initialProposals);
   const { toast } = useToast();
 
   const handleVote = (proposalId: number, voteType: "yes" | "no") => {
+    setProposals((prevProposals) =>
+      prevProposals.map((proposal) => {
+        if (proposal.id === proposalId) {
+          const updatedProposal = { ...proposal };
+          if (voteType === "yes") {
+            updatedProposal.yesVotes += proposal.userVotingPower;
+          } else {
+            updatedProposal.noVotes += proposal.userVotingPower;
+          }
+          return updatedProposal;
+        }
+        return proposal;
+      })
+    );
+
     const proposal = proposals.find((p) => p.id === proposalId);
     if (!proposal) return;
 
     const votes = proposal.userVotingPower;
-    console.log(
-      `Voted ${voteType} on proposal ${proposalId} with ${votes} votes`
-    );
 
     toast({
       title: "Vote Recorded",
