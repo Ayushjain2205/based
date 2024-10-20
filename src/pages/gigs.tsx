@@ -35,7 +35,7 @@ interface Gig {
 const gigs: Gig[] = [
   {
     id: 1,
-    title: "Fix a leaky faucet",
+    title: "Install faucet",
     category: "Plumbing",
     pay: 500,
     roziCoins: 50,

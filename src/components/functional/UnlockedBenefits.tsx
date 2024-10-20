@@ -175,7 +175,7 @@ const UnlockedBenefits: React.FC = () => {
       milestones: [
         {
           icon: "🔧",
-          title: "Tool Discount",
+          title: "Supplies Discount",
           isUnlocked: true,
           amount: "20% off",
         },

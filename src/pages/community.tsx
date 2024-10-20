@@ -90,6 +90,83 @@ const proposals: Proposal[] = [
     deadline: new Date("2024-10-15"),
     userVotingPower: 80,
   },
+  {
+    id: 4,
+    title: "Establish a Gig Worker Emergency Fund",
+    description:
+      "Set up an emergency fund to provide financial assistance to gig workers facing unexpected hardships or medical emergencies.",
+    communityId: "urban",
+    yesVotes: 3000,
+    noVotes: 700,
+    deadline: new Date("2024-09-30"),
+    userVotingPower: 120,
+  },
+  {
+    id: 5,
+    title: "Introduce Peer-to-Peer Mentorship Program",
+    description:
+      "Create a mentorship program where experienced gig workers can guide and support newcomers, fostering community growth and knowledge sharing.",
+    communityId: "electricians",
+    yesVotes: 1200,
+    noVotes: 300,
+    deadline: new Date("2024-11-15"),
+    userVotingPower: 90,
+  },
+  {
+    id: 6,
+    title: "Implement Fair Pricing Algorithm",
+    description:
+      "Develop and implement a transparent, fair pricing algorithm that ensures competitive rates for gig workers while maintaining affordability for customers.",
+    communityId: "handymen",
+    yesVotes: 2500,
+    noVotes: 1000,
+    deadline: new Date("2024-12-15"),
+    userVotingPower: 130,
+  },
+  {
+    id: 7,
+    title: "Launch Gig Worker Cooperative Ownership Model",
+    description:
+      "Explore and implement a cooperative ownership model where long-term, high-performing gig workers can become partial owners of the platform.",
+    communityId: "plumbers",
+    yesVotes: 1600,
+    noVotes: 900,
+    deadline: new Date("2025-01-31"),
+    userVotingPower: 110,
+  },
+  {
+    id: 8,
+    title: "Create a Gig Worker Wellness Program",
+    description:
+      "Establish a wellness program offering mental health support, stress management resources, and work-life balance guidance for gig workers.",
+    communityId: "urban",
+    yesVotes: 2200,
+    noVotes: 400,
+    deadline: new Date("2024-10-31"),
+    userVotingPower: 100,
+  },
+  {
+    id: 9,
+    title: "Implement Blockchain-based Payment System",
+    description:
+      "Develop and integrate a blockchain-based payment system to ensure faster, more secure, and transparent transactions for gig workers.",
+    communityId: "electricians",
+    yesVotes: 1800,
+    noVotes: 1200,
+    deadline: new Date("2025-02-28"),
+    userVotingPower: 140,
+  },
+  {
+    id: 10,
+    title: "Establish Gig Worker Representation Committee",
+    description:
+      "Form a committee with elected gig worker representatives to participate in platform decision-making processes and advocate for worker interests.",
+    communityId: "handymen",
+    yesVotes: 2800,
+    noVotes: 600,
+    deadline: new Date("2024-11-30"),
+    userVotingPower: 160,
+  },
 ];
 
 const CommunityVoting: React.FC = () => {
