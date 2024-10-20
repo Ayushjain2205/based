@@ -45,13 +45,13 @@ interface Proposal {
 }
 
 const communities: Community[] = [
-  { id: "plumbers", name: "Plumbers of Bangalore", members: 1234, icon: "🔧" },
-  { id: "urban", name: "Urban Company Partners", members: 5678, icon: "🏙️" },
-  { id: "handymen", name: "Handymen Network", members: 3456, icon: "🛠️" },
+  { id: "plumbers", name: "Plumbers of Bangalore", members: 234, icon: "🔧" },
+  { id: "urban", name: "Urban Company Partners", members: 1678, icon: "🏙️" },
+  { id: "handymen", name: "Handymen Network", members: 1456, icon: "🛠️" },
   {
     id: "electricians",
     name: "Electricians United",
-    members: 2345,
+    members: 345,
     icon: "⚡",
   },
 ];

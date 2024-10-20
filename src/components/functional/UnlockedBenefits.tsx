@@ -200,10 +200,10 @@ const UnlockedBenefits: React.FC = () => {
   ];
 
   const communities: Community[] = [
-    { name: "Plumbers of Bangalore", members: 1234, icon: "🔧" },
-    { name: "Urban Company Partners", members: 5678, icon: "🏙️" },
-    { name: "Handymen Network", members: 3456, icon: "🛠️" },
-    { name: "Electricians United", members: 2345, icon: "⚡" },
+    { name: "Plumbers of Bangalore", members: 234, icon: "🔧" },
+    { name: "Urban Company Partners", members: 1678, icon: "🏙️" },
+    { name: "Handymen Network", members: 1456, icon: "🛠️" },
+    { name: "Electricians Union", members: 345, icon: "⚡" },
   ];
 
   return (
