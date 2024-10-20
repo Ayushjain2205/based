@@ -7,6 +7,7 @@ interface Milestone {
   title: string;
   isUnlocked: boolean;
   unlockCondition?: string;
+  amount?: string;
 }
 
 interface Community {
@@ -54,9 +55,9 @@ const JourneyMap: React.FC<{ milestones: Milestone[] }> = ({ milestones }) => {
   return (
     <div className="space-y-4">
       {milestones.map((milestone, index) => (
-        <div key={index} className="flex items-center">
+        <div key={index} className="flex items-start">
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center ${
+            className={`w-8 h-8 rounded-full flex items-center justify-center mt-1 ${
               milestone.isUnlocked ? "bg-[#4CAF50]" : "bg-gray-300"
             }`}
           >
@@ -71,6 +72,15 @@ const JourneyMap: React.FC<{ milestones: Milestone[] }> = ({ milestones }) => {
               <span className="text-2xl mr-2">{milestone.icon}</span>
               <span className="text-lg font-semibold">{milestone.title}</span>
             </div>
+            {milestone.amount && (
+              <p
+                className={`text-sm font-medium text-[#4CAF50] mt-1 ${
+                  !milestone.isUnlocked ? "opacity-50" : ""
+                }`}
+              >
+                {milestone.amount}
+              </p>
+            )}
             {!milestone.isUnlocked && milestone.unlockCondition && (
               <p className="text-sm text-gray-600 mt-1">
                 {milestone.unlockCondition}
@@ -103,58 +113,89 @@ const CommunityCard: React.FC<Community> = ({ name, members, icon }) => {
 const UnlockedBenefits: React.FC = () => {
   const [expandedBenefit, setExpandedBenefit] = useState<string | null>(null);
 
-  const benefits = [
+  const benefits: BenefitCardProps[] = [
     {
       title: "Insurance",
       emoji: "🛡️",
       milestones: [
-        { icon: "🏥", title: "Health Coverage", isUnlocked: true },
-        { icon: "🚑", title: "Accident Insurance", isUnlocked: true },
+        {
+          icon: "🏥",
+          title: "Health Coverage",
+          isUnlocked: true,
+          amount: "₹2 Lakh",
+        },
+        {
+          icon: "🚑",
+          title: "Accident Insurance",
+          isUnlocked: true,
+          amount: "₹5 Lakh",
+        },
         {
           icon: "👨‍👩‍👧‍👦",
           title: "Family Coverage",
           isUnlocked: false,
           unlockCondition: "Complete 50 gigs to unlock",
+          amount: "₹10 Lakh",
         },
       ],
+      isActive: false,
+      onClick: () => {},
     },
     {
       title: "Loans",
       emoji: "💰",
       milestones: [
-        { icon: "🚨", title: "Emergency Loan", isUnlocked: true },
+        {
+          icon: "🚨",
+          title: "Emergency Loan",
+          isUnlocked: true,
+          amount: "Up to ₹50,000",
+        },
         {
           icon: "💼",
           title: "Business Loan",
           isUnlocked: false,
           unlockCondition: "Complete 100 gigs to unlock",
+          amount: "Up to ₹5 Lakh",
         },
         {
           icon: "🏠",
           title: "Housing Loan",
           isUnlocked: false,
           unlockCondition: "Maintain 4.8 rating for 6 months",
+          amount: "Up to ₹50 Lakh",
         },
       ],
+      isActive: false,
+      onClick: () => {},
     },
     {
       title: "Subsidies",
       emoji: "🏷️",
       milestones: [
-        { icon: "🔧", title: "Tool Discount", isUnlocked: true },
+        {
+          icon: "🔧",
+          title: "Tool Discount",
+          isUnlocked: true,
+          amount: "20% off",
+        },
         {
           icon: "📚",
           title: "Skill Upgrade",
           isUnlocked: false,
           unlockCondition: "Complete 75 gigs to unlock",
+          amount: "₹10,000 voucher",
         },
         {
           icon: "🎫",
           title: "License Renewal",
           isUnlocked: false,
           unlockCondition: "Maintain 4.7 rating for 1 year",
+          amount: "50% off",
         },
       ],
+      isActive: false,
+      onClick: () => {},
     },
   ];
 
@@ -188,9 +229,6 @@ const UnlockedBenefits: React.FC = () => {
         {expandedBenefit && (
           <Card className="w-full mt-4 border-[#FFA500] border-2">
             <CardContent className="p-4">
-              <h4 className="text-xl font-semibold mb-4 text-[#FFA500]">
-                {expandedBenefit} Journey
-              </h4>
               <JourneyMap
                 milestones={
                   benefits.find((b) => b.title === expandedBenefit)
