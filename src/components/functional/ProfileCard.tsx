@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Star, CheckCircle, Wrench, Coins, Gauge } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { usePrivy } from "@privy-io/react-auth";
 
 interface ProfileCardProps {
   name: string;
@@ -36,14 +37,31 @@ const getCategoryColor = (category: string) => {
   return colors[category] || "bg-gray-100 text-gray-800";
 };
 
+// Utility function to shorten ethereum address
+const shortenAddress = (address: string) => {
+  if (!address) return "";
+  return `${address.substring(0, 6)}...${address.substring(
+    address.length - 5
+  )}`;
+};
+
 export default function ProfileCard({
-  name,
   baseName,
   roles,
   rating,
   platformScore,
   roziCoins,
 }: ProfileCardProps) {
+  const { ready, authenticated, user } = usePrivy();
+
+  // Show nothing if user is not authenticated or data is still loading
+  if (!(ready && authenticated) || !user) {
+    return null;
+  }
+
+  const [name, setName] = useState(user.google?.name || "Anonymous Ninja");
+  const [address, setAddress] = useState(user.wallet?.address);
+
   return (
     <Card className="w-full max-w-md border-2 border-black bg-white shadow-lg mx-auto">
       <CardContent className="p-4">
@@ -51,7 +69,9 @@ export default function ProfileCard({
           <div className="flex items-center space-x-3">
             <Image src="/avatar.svg" alt="profile" width={64} height={64} />
             <div>
-              <h2 className="text-lg font-bold text-black">{name}</h2>
+              <h2 className="text-lg font-bold text-black capitalize">
+                {name}
+              </h2>
               <div className="flex flex-wrap gap-1 mt-1">
                 {roles.map((role, index) => (
                   <span
@@ -66,7 +86,7 @@ export default function ProfileCard({
               </div>
               <div className="flex items-center mt-2">
                 <span className="text-sm font-semibold text-black mr-2">
-                  {baseName}
+                  {address && shortenAddress(address)}
                 </span>
                 <span className="text-[#4CAF50] flex items-center text-xs bg-[#4CAF50]/10 px-1 py-0.5 rounded-full">
                   <CheckCircle className="w-3 h-3 mr-1" />
