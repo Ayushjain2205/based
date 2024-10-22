@@ -5,8 +5,6 @@ import Image from "next/image";
 import { usePrivy } from "@privy-io/react-auth";
 
 interface ProfileCardProps {
-  name: string;
-  baseName: string;
   roles: string[];
   rating: number;
   platformScore: number;
@@ -46,7 +44,6 @@ const shortenAddress = (address: string) => {
 };
 
 export default function ProfileCard({
-  baseName,
   roles,
   rating,
   platformScore,

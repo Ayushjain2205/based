@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,19 +9,15 @@ import {
   Banknote,
   Briefcase,
   LucideIcon,
-  CreditCard,
-  ArrowUpRight,
-  ArrowDownRight,
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePrivy } from "@privy-io/react-auth";
 import ImportDataSection from "@/components/functional/ImportDataSection";
 import ActivitySection from "@/components/functional/ActivitySection";
 import PaymentSection from "@/components/functional/PaymentSection";
-import { Button } from "@/components/ui/button";
 
 interface ProfileData {
-  name: string;
   role: string;
   rating: number;
   platformScore: number;
@@ -31,7 +25,6 @@ interface ProfileData {
 }
 
 const profileData: ProfileData = {
-  name: "Ayush Jain",
   role: "Plumber",
   rating: 4.8,
   platformScore: 92,
@@ -81,6 +74,15 @@ export default function MePage() {
     { icon: Banknote, value: "₹32,505", label: "Total Earnings" },
   ];
 
+  const { ready, authenticated, user } = usePrivy();
+
+  // Show nothing if user is not authenticated or data is still loading
+  if (!(ready && authenticated) || !user) {
+    return null;
+  }
+
+  const [name, setName] = useState(user.google?.name || "Anonymous Ninja");
+
   return (
     <Layout>
       <div className="container mx-auto pb-4">
@@ -90,8 +92,8 @@ export default function MePage() {
               <div className="flex items-center space-x-4">
                 <Image src="/avatar.svg" alt="profile" width={32} height={32} />
                 <div>
-                  <h2 className="text-xl font-bold text-[#000]">
-                    {profileData.name}
+                  <h2 className="text-xl font-bold text-[#000] capitalize">
+                    {name}
                   </h2>
                 </div>
               </div>
