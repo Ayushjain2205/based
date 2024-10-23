@@ -20,6 +20,8 @@ Rozi is a revolutionary platform aimed at enhancing the welfare of gig workers i
 1. **Rozi Token**: [0x932b4902AC3E40b46661881fBcA91268C81DFBf3](https://sepolia.basescan.org/address/0x932b4902AC3E40b46661881fBcA91268C81DFBf3)
 2. **Rozi Worker**: [0x03440FE30dd58137F8AA7faB1Ee382799D87E146](https://sepolia.basescan.org/address/0x03440FE30dd58137F8AA7faB1Ee382799D87E146)
 
+3. **Rozi Governance**:[0x09c6f3e951c618C8D0377bc0A44918BfD3273224](https://sepolia.basescan.org/address/0x09c6f3e951c618C8D0377bc0A44918BfD3273224)
+
 ## Vision
 
 Rozi is on a mission to evolve into the go-to platform for gig workers, ensuring they are protected, rewarded, and empowered through blockchain technology. Our end goal is to create a standardized, trust-based system for gig work that benefits millions of workers across India.
