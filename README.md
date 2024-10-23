@@ -1,44 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Rozi Platform
 
-## Getting Started
+Rozi is a revolutionary platform aimed at enhancing the welfare of gig workers in India. Built on the Base blockchain, Rozi tackles the challenges faced by gig workers, such as job and income instability, lack of legal protection, and absence of social security benefits. Our vision is to create the 'UPI for workers' in India, empowering gig workers with essential services and benefits.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Data Integration**: Seamless integration of worker data for transparency and trust.
+- **On-Chain Trust Score**: Workers build and maintain a verifiable trust score on-chain, ensuring better opportunities.
+- **Tiered Benefits**: Access to health, insurance, and other social security benefits based on the worker’s performance and trust score.
+- **$ROZI Token**: A governance token enabling community-driven decisions and platform governance.
+- **P2P Lending**: Decentralized peer-to-peer lending mechanism for workers.
+- **Direct Gig Marketplace**: A marketplace that connects workers directly with job opportunities.
+- **Instant Payments**: Real-time payments using blockchain for faster, hassle-free transactions.
+- **Performance Dashboard**: Workers can track their earnings, benefits, and trust score.
+- **Open Protocol**: An open platform for developers and third-party integrations.
+- **Multi-lingual Support**: Support for multiple languages to cater to the diverse Indian workforce.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployed Contracts
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+1. **Rozi Token**: [0x932b4902AC3E40b46661881fBcA91268C81DFBf3](https://sepolia.basescan.org/address/0x932b4902AC3E40b46661881fBcA91268C81DFBf3)
+2. **Rozi Worker**: [0x03440FE30dd58137F8AA7faB1Ee382799D87E146](https://sepolia.basescan.org/address/0x03440FE30dd58137F8AA7faB1Ee382799D87E146)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Vision
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-rozi token - https://sepolia.basescan.org/address/0x932b4902AC3E40b46661881fBcA91268C81DFBf3
-
-rozi worker - https://sepolia.basescan.org/address/0x03440FE30dd58137F8AA7faB1Ee382799D87E146
+Rozi is on a mission to evolve into the go-to platform for gig workers, ensuring they are protected, rewarded, and empowered through blockchain technology. Our end goal is to create a standardized, trust-based system for gig work that benefits millions of workers across India.
