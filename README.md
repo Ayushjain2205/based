@@ -38,3 +38,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+rozi token - https://sepolia.basescan.org/address/0x932b4902AC3E40b46661881fBcA91268C81DFBf3
+
+rozi worker - https://sepolia.basescan.org/address/0x03440FE30dd58137F8AA7faB1Ee382799D87E146
